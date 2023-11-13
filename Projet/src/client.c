@@ -83,7 +83,6 @@ int envoie_recois_message(int socketfd) {
 }
 
 void analyse(char *pathname, char *data, int nombre_couleurs) {
-    // compte de couleurs
     couleur_compteur *cc = analyse_bmp_image(pathname);
 
     int count;
@@ -115,6 +114,7 @@ char *get_couleurs_path(int socketfd, char *pathname, int nombre_couleurs) {
     }
     memset(data, 0, 1024);
     analyse(pathname, data, nombre_couleurs);
+    printf("data: %s\n", data);
     return data;
 }
 
@@ -268,13 +268,41 @@ int main(int argc, char **argv) {
         char *json = jsonSerialize(argv[1], &argv[3], argc - 3);
         envoie_json(socketfd, json);
     } else if (strcmp(argv[1], "image") == 0) {
-        char *json = jsonSerialize(argv[1], &argv[2], argc - 2);
-        char couleurs = *get_couleurs_path(socketfd, argv[2], atoi(argv[3]));
+        char *couleurs = get_couleurs_path(socketfd, argv[2], atoi(argv[3]));
+        if (couleurs != NULL) {
+            char *couleurs = get_couleurs_path(socketfd, argv[2], atoi(argv[3]));
+            if (couleurs != NULL) {
+
+                // Préparer le tableau pour les valeurs à sérialiser
+                char *valeurs[atoi(argv[3]) + 1];
+
+                // Ajouter le nombre de couleurs en premier
+                char nombre_couleurs_str[32];
+                sprintf(nombre_couleurs_str, "%d", atoi(argv[3]));
+                valeurs[0] = nombre_couleurs_str;
+
+                // Diviser la chaîne de couleurs et ajouter chaque couleur dans le tableau
+                char *token = strtok(couleurs, ",");
+                int i = 1;
+                while (token != NULL && i <= atoi(argv[3])) {
+                    valeurs[i++] = token;
+                    token = strtok(NULL, ",");
+                }
+
+                // Sérialiser en JSON
+                char *json_couleurs = jsonSerialize("image", valeurs, i);
+                envoie_json(socketfd, json_couleurs);
+
+                free(couleurs);
+                free(json_couleurs);
+            } else {
+                printf("Erreur lors de la récupération des couleurs.\n");
+            }
+        } else {
+            printf("Erreur lors de la récupération des couleurs.\n");
+        }
 
 
-        printf("couleur : %c\n", couleurs);
-
-        envoie_json(socketfd, json);
     } else {
         envoie_nom_de_client(socketfd);
     }

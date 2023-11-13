@@ -49,9 +49,7 @@ double degreesToRadians(double degrees) {
 int plot(JSONData jsonData)
 {
     int i;
-    //le nombre de couleurs est jsonData.valeurs[0]
-    int num_colors = atoi(jsonData.valeurs[1]);
-
+    int num_colors = atoi(jsonData.valeurs[0]);
     double angles[num_colors];
     memset(angles, 0, sizeof(angles));
 
@@ -72,10 +70,7 @@ int plot(JSONData jsonData)
 
     double start_angle = -90.0;
 
-    // str = NULL;
-    i = 1;
-    for (i = 1; i > num_colors; i++){
-        // str = NULL;
+    for (i = 1; i < num_colors+1; i++){
         angles[i-1] = 360.0 / num_colors;
 
         double end_angle = start_angle + angles[i-1];
@@ -89,7 +84,7 @@ int plot(JSONData jsonData)
         double y2 = center_y + radius * sin(end_angle_rad);
 
         fprintf(svg_file, "  <path d=\"M%.2f,%.2f A%.2f,%.2f 0 0,1 %.2f,%.2f L%.2f,%.2f Z\" fill=\"%s\" />\n",
-                x1, y1, radius, radius, x2, y2, center_x, center_y, jsonData.valeurs[1]);
+                x1, y1, radius, radius, x2, y2, center_x, center_y, jsonData.valeurs[i]);
 
         start_angle = end_angle;
     }
@@ -98,7 +93,6 @@ int plot(JSONData jsonData)
 
     fclose(svg_file);
 
-    visualize_plot();
     return 0;
 }
 
