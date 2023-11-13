@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
   <rect width="100%" height="100%" fill="#ffffff" />
-  <path d="M200.00,50.00 A150.00,150.00 0 0,1 329.90,275.00 L200.00,200.00 Z" fill="aaaaaa" />
-  <path d="M329.90,275.00 A150.00,150.00 0 0,1 70.10,275.00 L200.00,200.00 Z" fill="aaaa" />
-  <path d="M70.10,275.00 A150.00,150.00 0 0,1 200.00,50.00 L200.00,200.00 Z" fill="aake" />
+  <path d="M200.00,50.00 A150.00,150.00 0 0,1 200.00,50.00 L200.00,200.00 Z" fill=""13"" />
 </svg>

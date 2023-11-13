@@ -1,1 +1,5 @@
-ffff", "aaaa"
+#RRRRR
+#FFFF
+#EEEE
+#EEEFEFE
+#FEFEFEF
