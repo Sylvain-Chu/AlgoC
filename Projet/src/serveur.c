@@ -50,8 +50,7 @@ int plot(JSONData jsonData)
 {
     int i;
     //le nombre de couleurs est jsonData.valeurs[0]
-    int num_colors = atoi(jsonData.valeurs[0]);
-    printf("Nombre de couleurs: %d\n", num_colors);
+    int num_colors = atoi(jsonData.valeurs[1]);
 
     double angles[num_colors];
     memset(angles, 0, sizeof(angles));
@@ -75,7 +74,7 @@ int plot(JSONData jsonData)
 
     // str = NULL;
     i = 1;
-    for (i = 1; i>num_colors; i++){
+    for (i = 1; i > num_colors; i++){
         // str = NULL;
         angles[i-1] = 360.0 / num_colors;
 

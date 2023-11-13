@@ -87,15 +87,9 @@ void analyse(char *pathname, char *data, int nombre_couleurs) {
     couleur_compteur *cc = analyse_bmp_image(pathname);
 
     int count;
-    strcpy(data, "couleurs: ");
+    strcpy(data, "");
 
     char temp_string[nombre_couleurs];
-    snprintf(temp_string, sizeof(temp_string), "%d,", nombre_couleurs);
-
-    if (cc->size < 10) {
-        sprintf(temp_string, "%d,", cc->size);
-    }
-    strcat(data, temp_string);
 
     // choisir n couleurs
     for (count = 1; count < nombre_couleurs + 1 && cc->size - count > 0; count++) {
@@ -111,20 +105,17 @@ void analyse(char *pathname, char *data, int nombre_couleurs) {
     }
 
     data[strlen(data) - 1] = '\0';
+
 }
 
-int envoie_couleurs_path(int socketfd, char *pathname, int nombre_couleurs) {
-    char data[1024];
-    memset(data, 0, sizeof(data));
-    analyse(pathname, data, nombre_couleurs);
-
-    int write_status = write(socketfd, data, strlen(data));
-    if (write_status < 0) {
-        perror("erreur ecriture");
-        exit(EXIT_FAILURE);
+char *get_couleurs_path(int socketfd, char *pathname, int nombre_couleurs) {
+    char *data = malloc(1024);
+    if (data == NULL) {
+        return NULL;
     }
-
-    return 0;
+    memset(data, 0, 1024);
+    analyse(pathname, data, nombre_couleurs);
+    return data;
 }
 
 int envoie_couleurs(int socketfd, char *json) {
@@ -278,6 +269,11 @@ int main(int argc, char **argv) {
         envoie_json(socketfd, json);
     } else if (strcmp(argv[1], "image") == 0) {
         char *json = jsonSerialize(argv[1], &argv[2], argc - 2);
+        char couleurs = *get_couleurs_path(socketfd, argv[2], atoi(argv[3]));
+
+
+        printf("couleur : %c\n", couleurs);
+
         envoie_json(socketfd, json);
     } else {
         envoie_nom_de_client(socketfd);
